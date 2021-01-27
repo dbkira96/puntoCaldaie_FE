@@ -1,0 +1,38 @@
+.box {
+    background-color: var(--surface-e);
+    
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    
+}
+
+.box-stretched {
+    height: 100%;
+}
+
+.vertical-container {
+    margin: 0;
+    height: 600px;
+    background: var(--surface-d);
+    border-radius: 4px;
+}
+
+.nested-grid .p-col-4 {
+    padding-bottom: 1rem;
+}
+
+.clientFields{
+    margin: 2,2,2,2;
+    background-color: rgb(241, 241, 241);
+    font-size: large;
+    border-radius: 10px;
+}
+.clientField{
+    margin-top: 5px;
+}
+.stretched{
+    height:100%,
+}
+.main-container{
+    background-color:var(--surface-d);
+}

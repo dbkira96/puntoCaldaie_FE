@@ -22,13 +22,19 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
+            "aot": false,
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              
+              "src/styles.scss",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/themes/saga-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeflex/primeflex.css"
+              
             ],
             "scripts": []
           },
@@ -124,5 +130,8 @@
       }
     }
   },
-  "defaultProject": "puntoCaldaieFe"
+  "defaultProject": "puntoCaldaieFe",
+  "cli": {
+    "analytics": "eb743ddc-8842-4afb-a73e-dbb6c8953084"
+  }
 }

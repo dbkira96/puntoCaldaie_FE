@@ -1,0 +1,7 @@
+{
+    "/puntocaldaie/*": {
+        "target": "http://localhost:8080/puntocaldaie",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}
