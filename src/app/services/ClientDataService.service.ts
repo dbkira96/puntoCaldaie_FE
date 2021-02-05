@@ -37,7 +37,10 @@ export class ClientDataServiceService {
     return this.httpClient.post<Cliente[]>(`${environment.API_URL}/puntocaldaie/clienti/addAll`, users,this.httpOptions);
   }
   delete(id: number) {
-    return this.httpClient.delete(`${environment.API_URL}/puntocaldaie/clienti/get?id=${id}`);
+    return this.httpClient.delete(`${environment.API_URL}/puntocaldaie/clienti/delete?id=${id}`);
+  }
+  deleteAll(){
+    return this.httpClient.get(`${environment.API_URL}/puntocaldaie/clienti/deleteAll`);
   }
 
   getUsersFromJson(){

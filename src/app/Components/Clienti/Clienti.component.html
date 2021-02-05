@@ -1,0 +1,347 @@
+<app-toolbar></app-toolbar>
+<div class="p-d-flex p-flex-wrap main-container">
+    
+    
+        <p-card class="p-col-8 "  >
+            <ng-template pTemplate="header">
+             
+                <div class="p-d-flex p-jc-between p-ai-center p-mx-4 ">
+                    <div><h3>Ricerca Utenti</h3></div>
+                    <div><button pButton pRipple  icon="pi pi-plus" class="p-button-success "
+                        (click)="nuovoUtente()"></button></div>
+                        <div class="p-toolbar-group-right">
+  
+      
+                            <button pButton type="button" (click)="downloadUserData()" class="p-button-raised "
+                            icon="pi pi-download"></button>
+                            <label pButton type="button" class="p-button-raised p-ml-2"
+                            icon="pi pi-upload" >
+                                <input type="file" style="display: none;"
+                                id="file"
+                                (change)="onBasicUpload($event.target.files)">
+                        </label>
+                        </div>
+                </div>
+            </ng-template>
+            <p-table #dt [value]="clienti" [rows]="20" [scrollable]="true"  [rowHover]="true" dataKey="id" styleClass="p-datatable-sm p-datatable-striped"
+                [globalFilterFields]="['nominativo','telefono','cellulare']"scrollHeight="250px"
+                [virtualScroll]="true" [virtualRowHeight]="34"  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                >
+                <ng-template pTemplate="caption">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" [(ngModel)]="search" (input)="dt.filterGlobal(search,'contains')"
+                                placeholder="Cerca..." />
+                        </span>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th   pSortableColumn="nominativo" >
+                            Nominativo
+                            <p-sortIcon ></p-sortIcon> 
+                        </th> 
+                        <th>Tel/Cell </th>
+                        <th>Indirizzo</th>
+                        <th>Città </th> 
+                            
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-cliente>
+                    <tr (click)="selectCliente(cliente)">
+                        <td>{{cliente.nominativo}}</td>
+                        <td>{{cliente.telefono}} {{cliente.cellulare}}</td>
+                        <td>{{cliente.indirizzo}}</td>
+                        <td>{{cliente.citta}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+           
+        </p-card>
+    
+    <p-card class="p-col-4 p-as-stretch" header="Dettagli cliente">
+       <div class="p-d-flex p-flex-column">
+            <div class="clientField"> <b>Nominativo:</b> {{selCliente.nominativo}}</div>
+            <div class="clientField"> <b>Luogo Nascita:</b> {{selCliente.luogoNascita}}</div>
+            <div class="clientField"><b>Data Nascita:</b> {{selCliente.dataNascita}}</div>
+            <div class="clientField"><b>Tel/Cell:</b> {{selCliente.telefono}}/{{selCliente.cellulare}} </div>
+            <div class="clientField"><b>Indirizzo:</b> {{selCliente.indirizzo}}</div>
+            <div class="clientField"><b>CAP:</b> {{selCliente.cap}} </div>
+            <div class="clientField"><b>Citta:</b> {{selCliente.citta}}</div>
+            <div class="clientField"><b>CF/p.iva:</b> {{selCliente.cf}} {{selCliente.piva}}</div>
+       </div>
+       <ng-template pTemplate="footer">
+        <p-button *ngIf="selCliente.id!=undefined" pRipple label="Modifica" icon="pi pi-pencil" iconPos="right" (onClick)="editCliente()"></p-button>
+        <p-button *ngIf="selCliente.id!=undefined" class="p-button-danger p-ml-2" pRipple label="Elimina" icon="pi pi-times"  iconPos="right" (onClick)="deleteCliente()"></p-button>
+    </ng-template>
+    </p-card> 
+
+    <p-card class="p-col-12" >
+        <ng-template pTemplate="header">
+             
+            <div class="p-d-flex p-jc-between p-ai-center p-mx-4 ">
+                <div><h3>Caldaie</h3></div>
+                <div><button pButton pRipple  icon="pi pi-plus" class="p-button-success "
+                    (click)="newCaldaia()"></button></div>
+                
+            </div>
+        </ng-template>
+        <p-table #dt *ngIf="selCliente.caldaie.length>=1" [value]="selCliente.caldaie">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Titolo </th>
+                    <th>Scadenza </th>
+                    <th>Scad. Anno </th>
+                    <th>Scad. Bollo</th>
+                    <th>Importo </th> 
+                    <th>Note</th>     
+                    <th></th> 
+                    <th></th> 
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-caldaia>
+                <tr>
+                    <td>{{caldaia.titolo}}</td>
+                    <td>{{caldaia.scadenza}}</td>
+                    <td>{{caldaia.scadanno}} </td>
+                    <td>{{caldaia.scadbollo}}</td>
+                    <td>{{caldaia.importo}}</td>
+                    <td colspan="2">{{caldaia.annotazione}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                            (click)="editCaldaia(caldaia)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                            (click)="deleteCaldaia(caldaia)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card> 
+    <p-card  class="p-col-12">
+        <ng-template pTemplate="header">
+             
+            <div class="p-d-flex p-jc-between p-ai-center p-mx-4 ">
+                <div><h3>Stufe</h3></div>
+                <div><button pButton pRipple  icon="pi pi-plus" class="p-button-success "
+                    (click)="newStufa()"></button></div>
+                
+            </div>
+        </ng-template>
+        
+        
+        <p-table #dt *ngIf="selCliente.stufe.length>=1" [value]="selCliente.stufe">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Titolo </th> 
+                    <th>Scad. Anno </th>
+                    <th>Scad. Bollo</th>
+                    <th>Importo </th> 
+                    <th>Note</th>
+                    <th></th> 
+                    <th></th>      
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-stufa>
+                <tr>
+                    <td>{{stufa.titolo}}</td>
+                    <td>{{stufa.scadanno}} </td>
+                    <td>{{stufa.scadbollo}}</td>
+                    <td>{{stufa.importo}}</td>
+                    <td colspan="2">{{stufa.annotazione}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                            (click)="editStufa(stufa)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                            (click)="deleteStufa(stufa)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card> 
+</div>
+<!--     DIALOG NUOVO CLIENTE -->
+<p-dialog [(visible)]="clientDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true"
+styleClass="p-fluid">
+
+    <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && saveCliente()" novalidate>
+
+        <div class="form-group">
+            <label for="name">Nominativo</label>
+            <input pInputText required autofocus type="text" class="form-control" id="name" name="name" #name="ngModel"
+                [(ngModel)]="selCliente.nominativo" [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" />
+            <div *ngIf="name.dirty  && name.touched && name.invalid">
+                <div class="alert-danger" *ngIf="name.errors.required">
+                    inserisci un nome
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="brand">Luogo Nascita</label>
+            <input pInputText type="text" class="form-control" id="lnascita" name="lnascita" #lnascita="ngModel"
+                [(ngModel)]="selCliente.luogoNascita" />
+            
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">telefono</label>
+            <input pInputText type="text" class="form-control" id="telefono" name="telefono" #telefono="ngModel"
+                [(ngModel)]="selCliente.telefono"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="cellulare">Cellulare</label>
+            <input pInputText type="text" class="form-control" id="cellulare" name="cellulare" #cellulare="ngModel"
+                [(ngModel)]="selCliente.cellulare" />
+            
+        </div>
+        <div class="form-group">
+            <label for="indirizzo">Indirizzo</label>
+            <input pInputText type="text" class="form-control" id="Indirizzo" name="Indirizzo" #Indirizzo="ngModel"
+                [(ngModel)]="selCliente.indirizzo" />
+            
+        </div>
+        <div class="form-group">
+            <label for="cap">cap</label>
+            <input pInputText type="text" class="form-control" id="cap" name="cap" #cap="ngModel"
+                [(ngModel)]="selCliente.cap" [ngClass]="{ 'is-invalid': f.submitted && cap.invalid }" />
+           
+        </div>
+        <div class="form-group">
+            <label for="cf">cf</label>
+            <input pInputText type="text" class="form-control" id="cf" name="cf" #cf="ngModel"
+                [(ngModel)]="selCliente.cf"  />
+            
+        </div>
+
+        <div class="form-group">
+            <label for="piva">piva</label>
+            <input pInputText type="text" class="form-control" id="piva" name="piva" #piva="ngModel"
+                [(ngModel)]="selCliente.piva" [ngClass]="{ 'is-invalid': f.submitted && piva.invalid }" />
+        
+        </div>
+        <div class="form-group">
+            <button pButton class="p-button-danger" label="Cancel" (click)="hideClientDialog()" >
+            </button>
+        </div>
+        <div class="form-group">
+            <button pButton class="p-button-success" label="Save" type="submit" [disabled]="f.invalid"  >
+            </button>
+        </div>
+    </form>
+
+</p-dialog>
+<!--     DIALOG NUOVA CALDAIA -->
+<p-dialog [(visible)]="caldaiaDialog" [style]="{width: '450px'}" header="Dettagli Caldaia" [modal]="true"
+styleClass="p-fluid">
+
+    <form name="formCaldaia" #f1="ngForm" (ngSubmit)="f.form.valid && saveCaldaia()" novalidate>
+
+        <div class="form-group">
+            <label for="name">Titolo</label>
+            <input pInputText required autofocus type="text" class="form-control" id="name" name="name" #name="ngModel"
+                [(ngModel)]="selCaldaia.titolo" [ngClass]="{ 'is-invalid': f1.submitted && name.invalid }" />
+            <div *ngIf="name.dirty  && name.touched && name.invalid">
+                <div class="alert-danger" *ngIf="name.errors.required">
+                    inserisci un nome
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="scadenza">Scadenza</label>
+            <input pInputText type="text" class="form-control" id="scadenza" name="scadenza" #scadenza="ngModel"
+                [(ngModel)]="selCaldaia.scadenza" />
+            
+        </div>
+
+        <div class="form-group">
+            <label for="scadanno">Scadenza Anno</label>
+            <input pInputText type="text" class="form-control" id="scadanno" name="scadanno" #scadanno="ngModel"
+                [(ngModel)]="selCaldaia.scadanno"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="importo">Importo</label>
+            <input pInputText type="text" class="form-control" id="importo" name="importo" #importo="ngModel"
+                [(ngModel)]="selCaldaia.importo"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="scadbollo">Scadenza Bollo</label>
+            <input pInputText type="text" class="form-control" id="scadbollo" name="scadbollo" #scadbollo="ngModel"
+                [(ngModel)]="selCaldaia.scadbollo"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="annotazione">Annotazione</label>
+            <textarea pInputTextarea type="text" class="form-control" id="annotazione" name="annotazione" #annotazione="ngModel"
+                [(ngModel)]="selCaldaia.annotazione"  ></textarea>
+            
+        </div>
+        
+        <div class="form-group p-mt-2">
+            <button pButton class="p-button-danger" label="Cancel" (click)="hideStufaDialog()" >
+            </button>
+        </div>
+        <div class="form-group p-mt-2 ">
+            <button pButton class="p-button-success" label="Save" type="submit" [disabled]="f1.invalid"  >
+            </button>
+        </div>
+    </form>
+
+</p-dialog>
+
+<p-dialog [(visible)]="stufaDialog" [style]="{width: '450px'}" header="Dettagli Stufa" [modal]="true"
+styleClass="p-fluid">
+
+    <form name="formCaldaia" #f2="ngForm" (ngSubmit)="f2.form.valid && saveStufa()" novalidate>
+
+        <div class="form-group">
+            <label for="name">Titolo</label>
+            <input pInputText required autofocus type="text" class="form-control" id="name" name="name" #name="ngModel"
+                [(ngModel)]="selStufa.titolo" [ngClass]="{ 'is-invalid': f2.submitted && name.invalid }" />
+            <div *ngIf="name.dirty  && name.touched && name.invalid">
+                <div class="alert-danger" *ngIf="name.errors.required">
+                    inserisci un nome
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="scadanno">Scadenza Anno</label>
+            <input pInputText type="text" class="form-control" id="scadanno" name="scadanno" #scadanno="ngModel"
+                [(ngModel)]="selStufa.scadanno"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="importo">Importo</label>
+            <input pInputText type="text" class="form-control" id="importo" name="importo" #importo="ngModel"
+                [(ngModel)]="selStufa.importo"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="scadbollo">Scadenza Bollo</label>
+            <input pInputText type="text" class="form-control" id="scadbollo" name="scadbollo" #scadbollo="ngModel"
+                [(ngModel)]="selStufa.scadbollo"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="annotazione">Annotazione</label>
+            <textarea pInputTextarea type="text" class="form-control" id="annotazione" name="annotazione" #annotazione="ngModel"
+                [(ngModel)]="selStufa.annotazione"  ></textarea>
+            
+        </div>
+        
+        <div class="form-group p-mt-2">
+            <button pButton class="p-button-danger" label="Cancel" (click)="hideClientDialog()" >
+            </button>
+        </div>
+        <div class="form-group p-mt-2 ">
+            <button pButton class="p-button-success" label="Save" type="submit" [disabled]="f2.invalid"  >
+            </button>
+        </div>
+    </form>
+
+</p-dialog>
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<p-toast position="top-center" key="tc" > </p-toast>

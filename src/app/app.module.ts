@@ -9,7 +9,7 @@ import {RouterModule} from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import {CardModule} from 'primeng/card';
 import { AppComponent } from './app.component';
-import { ClientiComponent } from './Clienti/Clienti.component';
+import { ClientiComponent } from './Components/Clienti/Clienti.component';
 import {TableModule} from 'primeng/table';
 import {ToastModule} from 'primeng/toast';
 import {CalendarModule} from 'primeng/calendar';
@@ -27,16 +27,23 @@ import {RatingModule} from 'primeng/rating';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {InputNumberModule} from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+
 
 
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { MessageService } from 'primeng/api';
+import { CaldaieComponent } from './Components/Caldaie/Caldaie.component';
+import { StufeComponent } from './Components/Stufe/Stufe.component';
 
 @NgModule({
-  declarations: [		
+  declarations: [			
     AppComponent,
     ClientiComponent,
-      ToolbarComponent
+      ToolbarComponent,
+      CaldaieComponent,
+      StufeComponent
    ],
   imports: [
     AppRoutingModule,
@@ -58,6 +65,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     FileUploadModule,
     ToolbarModule,
     RatingModule,
+    AutoCompleteModule,
     FormsModule,
     RadioButtonModule,
     InputNumberModule,
@@ -66,7 +74,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     RouterModule,
 
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

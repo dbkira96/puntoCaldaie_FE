@@ -1,0 +1,145 @@
+<app-toolbar></app-toolbar>
+
+<div class="p-d-flex p-flex-wrap main-container">
+    
+    
+  <p-card class="p-col-12 "  >
+      <ng-template pTemplate="header">
+       
+          <div class="p-d-flex p-jc-between p-ai-center p-mx-4 ">
+              <div><h3>Ricerca Stufe</h3></div>
+              <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>            
+          </div>
+      </ng-template>
+      <p-table  #dt [value]="stufe" [rows]="20" [scrollable]="true" [(selection)]="filteredStufe" [rowHover]="true" dataKey="id" styleClass="p-datatable-sm p-datatable-striped"
+          [globalFilterFields]="['cliente.nominativo','cliente.telefono','cliente.cellulare']"scrollHeight="500px"
+          [virtualScroll]="true" [virtualRowHeight]="34"  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          >
+          <ng-template pTemplate="caption" >
+              <div class="p-d-flex p-flex-row p-ai-baseline">
+                  
+                  <span class="p-input-icon-left p-ml-2">
+                      
+                      <i class="pi pi-search"></i>
+                      <input pInputText type="text" [(ngModel)]="search" (input)="dt.filterGlobal(search,'contains')"
+                          placeholder="Cerca..." />
+                  </span>
+                  
+                    <label class="p-ml-2">Anno Scadenza</label>
+                    <p-columnFilter class="p-ml-2" field="scadanno" matchMode="contains" [showMenu]="false" >
+                      <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        
+                        <input pInputText type="text" [(ngModel)]="selectedYear" editable="true"(ngModelChange)="filter($event)"
+                        placeholder="Tutti"  >
+                      </ng-template>  
+                    </p-columnFilter>
+                    <label class="p-ml-2" >Città</label>
+                    <p-columnFilter class="p-ml-2" field="cliente.citta" matchMode="contains" [showMenu]="false" >
+                      <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                        
+                        <input pInputText type="text" [(ngModel)]="selectedCitta" editable="true"(ngModelChange)="filter($event)"
+                        placeholder="Tutti"  >
+                      </ng-template>  
+                    </p-columnFilter>
+                </div>  
+          </ng-template>
+          <ng-template pTemplate="header" >
+              <tr>
+                <th style="width: 3rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+                <th > Nominativo</th>
+                <th>Recapito</th>  
+                <th>Indirizzo</th>  
+                <th>Città</th>  
+                <th>Stufa</th>  
+                 
+                <th>Anno Scad</th>  
+                <th>Importo</th>    
+                <th>Annotazione</th>
+                <th></th>
+                <th></th>    
+               
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-stufa>
+              <tr >
+                <td style="width: 3rem">
+                  <p-tableCheckbox [value]="stufa"></p-tableCheckbox>
+              </td>
+                <td>{{stufa.cliente.nominativo}}</td>
+                    <td>{{stufa.cliente.telefono}} {{stufa.cliente.cellulare}}</td>
+                    <td>{{stufa.cliente.indirizzo}}</td>
+                    <td>{{stufa.cliente.citta}}</td>
+                    <td>{{stufa.titolo}}</td>
+                    <td>{{stufa.scadenza}}</td>
+                    <td>{{stufa.scadanno}} </td>
+                    
+                    <td>{{stufa.importo}}</td>
+                    <td colspan="2">{{stufa.annotazione}}</td>
+                    <td>
+                      <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+                          (click)="editStufa(stufa)"></button>
+                      <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                          (click)="deleteStufa(stufa)"></button>
+                  </td>
+              </tr>
+          </ng-template>
+      </p-table>
+      <p-dialog [(visible)]="stufaDialog" [style]="{width: '450px'}" header="Dettagli Stufa" [modal]="true"
+styleClass="p-fluid">
+
+    <form name="formStufa" #f1="ngForm" (ngSubmit)="f1.form.valid && saveStufa()" novalidate>
+
+        <div class="form-group">
+            <label for="name">Titolo</label>
+            <input pInputText required autofocus type="text" class="form-control" id="name" name="name" #name="ngModel"
+                [(ngModel)]="selStufa.titolo" [ngClass]="{ 'is-invalid': f1.submitted && name.invalid }" />
+            <div *ngIf="name.dirty  && name.touched && name.invalid">
+                <div class="alert-danger" *ngIf="name.errors.required">
+                    inserisci un nome
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div class="form-group">
+            <label for="scadanno">Scadenza Anno</label>
+            <input pInputText type="text" class="form-control" id="scadanno" name="scadanno" #scadanno="ngModel"
+                [(ngModel)]="selStufa.scadanno"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="importo">Importo</label>
+            <input pInputText type="text" class="form-control" id="importo" name="importo" #importo="ngModel"
+                [(ngModel)]="selStufa.importo"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="scadbollo">Scadenza Bollo</label>
+            <input pInputText type="text" class="form-control" id="scadbollo" name="scadbollo" #scadbollo="ngModel"
+                [(ngModel)]="selStufa.scadbollo"  />
+            
+        </div>
+        <div class="form-group">
+            <label for="annotazione">Annotazione</label>
+            <textarea pInputTextarea type="text" class="form-control" id="annotazione" name="annotazione" #annotazione="ngModel"
+                [(ngModel)]="selStufa.annotazione"  ></textarea>
+            
+        </div>
+        
+        <div class="form-group p-mt-2">
+            <button pButton class="p-button-danger" label="Cancel" (click)="hideStufaDialog()" >
+            </button>
+        </div>
+        <div class="form-group p-mt-2 ">
+            <button pButton class="p-button-success" label="Save" type="submit" [disabled]="f1.invalid"  >
+            </button>
+        </div>
+    </form>
+
+</p-dialog>
+  </p-card>
+  <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+  <p-toast position="top-center" key="tc" > </p-toast>
